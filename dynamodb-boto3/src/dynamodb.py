@@ -26,3 +26,7 @@ class DynamoDB:
                 'WriteCapacityUnits': new_write_capacity
             }
         )
+
+    def delete_table(self, table):
+        print("Deleting table name: ", table)
+        return self._client.delete_table(TableName=table)

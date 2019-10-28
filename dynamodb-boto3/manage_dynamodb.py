@@ -56,8 +56,13 @@ def update_table_iops():
     get_dynamodb().update_read_write_capacity("Movies", 10, 10)
 
 
+def delete_table():
+    get_dynamodb().delete_table("Movies")
+
+
 if __name__ == '__main__':
     import sys
     # create_dynamodb_table()
     # describe_table()
-    update_table_iops()
+    # update_table_iops()
+    delete_table()
