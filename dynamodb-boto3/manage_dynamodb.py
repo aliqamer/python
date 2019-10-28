@@ -52,7 +52,12 @@ def describe_table():
     print("description is: ", description)
 
 
+def update_table_iops():
+    get_dynamodb().update_read_write_capacity("Movies", 10, 10)
+
+
 if __name__ == '__main__':
     import sys
-    create_dynamodb_table()
-    describe_table()
+    # create_dynamodb_table()
+    # describe_table()
+    update_table_iops()
