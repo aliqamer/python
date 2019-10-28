@@ -12,3 +12,7 @@ class DynamoDB:
             KeySchema=key_schema,
             ProvisionedThroughput=iops
         )
+
+    def describe_table(self, table):
+        print("Describing Dynamodb table name: "+table)
+        return self._client.describe_table(TableName=table)
