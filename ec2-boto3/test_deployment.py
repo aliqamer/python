@@ -1,4 +1,5 @@
 from src.client_locator import EC2Client
+from src.ec2.ec2 import EC2
 from src.ec2.vpc import VPC
 
 
@@ -57,6 +58,22 @@ def main():
 
     # Add name tag to Private Subnet
     vpc.add_name_tag(private_subnet_id, 'Boto3-Private-Subnet')
+
+    # EC2 Instances
+    ec2 = EC2(ec2_client)
+
+    # Create a kay pair
+    key_pair_name = 'Boto3-KeyPair'
+    key_pair_response = ec2.create_key_pair(key_pair_name)
+
+    print('Created Key Pair with name ' +
+          key_pair_name+':'+str(key_pair_response))
+
+    # Create a Security Group
+    public_security_group_name = 'Boto3-Public-SG'
+    public_security_group_description = 'Public SG for public subnet internet access'
+    ec2.create_security_group(
+        public_security_group_name, public_security_group_description, vpc_id)
 
 
 if __name__ == '__main__':
