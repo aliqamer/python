@@ -72,8 +72,46 @@ def main():
     # Create a Security Group
     public_security_group_name = 'Boto3-Public-SG'
     public_security_group_description = 'Public SG for public subnet internet access'
-    ec2.create_security_group(
+    public_sg_response = ec2.create_security_group(
         public_security_group_name, public_security_group_description, vpc_id)
+
+    public_sg_id = public_sg_response['GroupId']
+
+    # Add Public Access to Security Group
+    ec2.add_inbound_rule_to_sg(public_sg_id)
+
+    print('Added public access rule to Security Group '+public_security_group_name)
+
+    user_data = """#!/bin/bash
+                   yum update -y
+                   yum install httpd24 -y
+                   service httpd start
+                   chkconfig httpd on
+                   echo "<html><body><h1>Hello from <b>Boto3</b> using Python!</h1></body></html>" > /var/www/html/index.html """
+
+    ami_id = 'ami-1b316af0'
+
+    # Launch a public EC2 Instance
+    ec2.launch_ec2_instance(ami_id, key_pair_name,
+                            1, 1, public_sg_id, public_subnet_id, user_data)
+
+    print('Launching Public EC2 instance using AMI ami-1b316af0')
+
+    # Adding another Security Group for Private EC2 Instance
+
+    private_security_group_name = 'Boto3-Private-SG'
+    private_security_group_description = 'Private SG for private subnet'
+    private_sg_response = ec2.create_security_group(
+        private_security_group_name, private_security_group_description, vpc_id)
+
+    private_sg_id = private_sg_response['GroupId']
+
+    # Add rule to private secruity group
+    ec2.add_inbound_rule_to_sg(private_sg_id)
+
+    # Launch a private EC2 Instance
+    ec2.launch_ec2_instance(ami_id, key_pair_name,
+                            1, 1, private_sg_id, private_subnet_id, """""")
 
 
 if __name__ == '__main__':
