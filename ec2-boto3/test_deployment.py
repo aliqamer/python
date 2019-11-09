@@ -114,5 +114,46 @@ def main():
                             1, 1, private_sg_id, private_subnet_id, """""")
 
 
+def describe_instances():
+    ec2_client = EC2Client().get_client()
+    ec2 = EC2(ec2_client)
+
+    ec2_response = ec2.describe_ec2_instances()
+    print('ec2 response '+str(ec2_response))
+
+
+def modify_instance():
+    ec2_client = EC2Client().get_client()
+    ec2 = EC2(ec2_client)
+
+    ec2.modify_ec2_instance('instanceid')
+
+
+def stop_instance():
+    ec2_client = EC2Client().get_client()
+    ec2 = EC2(ec2_client)
+
+    ec2.stop_ec2_instance('instanceid')
+
+
+def start_instance():
+    ec2_client = EC2Client().get_client()
+    ec2 = EC2(ec2_client)
+
+    ec2.start_ec2_instance('instanceid')
+
+
+def terminate_instance():
+    ec2_client = EC2Client().get_client()
+    ec2 = EC2(ec2_client)
+
+    ec2.terminate_ec2_instance('instanceid')
+
+
 if __name__ == '__main__':
-    main()
+    # main()
+    # describe_instances()
+    # modify_instance()
+    # stop_instance()
+    # start_instance()
+    terminate_instance()
