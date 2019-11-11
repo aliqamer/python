@@ -1,18 +1,27 @@
 import json
 import boto3
 
-
-def start_stop_ec2_instances_with_autoscaling(event, context):
+def lambda_handler(event, context):
 
     autoscaling_client = boto3.client('autoscaling')
+    
+    # accept request param as start=1 or 0
+    startValue = event["queryStringParameters"]['start']
 
-    count = 1
+    if startValue.isnumeric() == False:
+        return {
+            "statusCode": 400,
+            "body": "Invalid request!"
+        }
+    
+    count = int(startValue)    
+    
     if count > 0:
         count = 1
     else:
         count = 0
     response = auto_scale(autoscaling_client, count)
-    print('autoscaling response: '+response)
+    print('autoscaling response: '+str(response))
 
     message = 'Environment is started, wait for 15 min for bootup time'
 
@@ -25,7 +34,7 @@ def start_stop_ec2_instances_with_autoscaling(event, context):
 
     response = {
         "statusCode": 200,
-        "body": json.dumps(body)
+        "body": message
     }
 
     return response
@@ -42,8 +51,8 @@ def start_stop_ec2_instances_with_autoscaling(event, context):
 
 def auto_scale(autoscaling_client, count):
 
-    return autoscaling_client.set_desired_capacity(
-        AutoScalingGroupName='my-auto-scaling-group',
+    return autoscaling_client.update_auto_scaling_group(
+        AutoScalingGroupName='NotifyCoreGatewayECSClusterdev-EcsAutoScalingGroup-8E1KR7QP4WSQ',
         DesiredCapacity=count,
-        HonorCooldown=True,
+        MinSize=count
     )
