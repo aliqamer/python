@@ -34,7 +34,12 @@ def lambda_handler(event, context):
 
     response = {
         "statusCode": 200,
-        "body": message
+        "body": json.dumps(message),
+        "headers": {
+            "Content-Type": "application/json"  # return as json response
+            # "Access-Control-Allow-Origin" : "*", #// Required for CORS support to work
+            # "Access-Control-Allow-Credentials" : "true" #// Required for cookies, authorization headers with HTTPS
+        }
     }
 
     return response
